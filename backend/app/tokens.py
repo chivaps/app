@@ -14,3 +14,4 @@ class UpdatedTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class UpdatedTokenObtainPairView(TokenObtainPairView):
     serializer_class = UpdatedTokenObtainPairSerializer
+    
