@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-const MainPage = () => {
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+const Todo = () => {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState('');
   const userdata = JSON.parse(localStorage.getItem('jwt'));
@@ -10,7 +12,8 @@ const MainPage = () => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${userdata.access}`
     },
-});
+  });
+
   const fetchTodos = async () => {
       const response = await api.get('todo/');
       setTodos(response.data);
@@ -38,27 +41,35 @@ const MainPage = () => {
   }, []);
 
   return (
-      <div>
-          <h1>Todo List</h1>
-          <input
-              type="text"
-              value={newTodo}
-              onChange={(e) => setNewTodo(e.target.value)}
-              placeholder="Add new todo"
-          />
-          <button onClick={addTodo}>Add</button>
-          <ul>
+      <div className="container mt-4">
+          <h1 className="text-center mb-4">Todo List</h1>
+          <div className="input-group mb-3" style={{ maxWidth: '500px', margin: 'auto' }}>
+              <input
+                  type="text"
+                  value={newTodo}
+                  onChange={(e) => setNewTodo(e.target.value)}
+                  placeholder="Add new todo"
+                  className="form-control"
+              />
+              <div className="input-group-append">
+                  <button onClick={addTodo} className="btn btn-primary">Add</button>
+              </div>
+          </div>
+          <ul className="list-group" style={{ maxWidth: '500px', margin: 'auto' }}>
               {todos.map(todo => (
-                  <li key={todo.id}>
-                      <input
-                          type="checkbox"
-                          checked={todo.completed}
-                          onChange={() => toggleTodo(todo.id, todo.completed)}
-                      />
-                      <span style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>
-                          {todo.title}
-                      </span>
-                      <button onClick={() => deleteTodo(todo.id)}>Delete</button>
+                  <li key={todo.id} className="list-group-item d-flex justify-content-between align-items-center">
+                      <div className="form-check">
+                          <input
+                              type="checkbox"
+                              checked={todo.completed}
+                              onChange={() => toggleTodo(todo.id, todo.completed)}
+                              className="form-check-input"
+                          />
+                          <label className="form-check-label" style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>
+                              {todo.title}
+                          </label>
+                      </div>
+                      <button onClick={() => deleteTodo(todo.id)} className="btn btn-outline-danger">Delete</button>
                   </li>
               ))}
           </ul>
@@ -66,4 +77,4 @@ const MainPage = () => {
   );
 }
 
-export default MainPage
+export default Todo;
