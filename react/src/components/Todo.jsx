@@ -9,6 +9,8 @@ const Todo = () => {
   const userdata = JSON.parse(localStorage.getItem('jwt'));
   const navigate = useNavigate();
 
+  let [jwt, setJwt] = useState(localStorage.getItem('jwt') ? JSON.parse(localStorage.getItem('jwt')) : null);
+
   const api = axios.create({
     baseURL: 'http://127.0.0.1:8000/app/',
     headers: {
@@ -44,6 +46,37 @@ const Todo = () => {
     navigate('/login');
   }
 
+
+  let refreshToken = async () => {
+    if (!jwt) return;
+    try {
+        let response = await api.post('token/refresh/', {
+            refresh : jwt.refresh,
+        });
+        let data = response.data;
+        if (response.status === 200){
+            console.log("updating token...");
+            setJwt(data);
+            localStorage.setItem('jwt', JSON.stringify(data));
+        }else logout();
+    }catch(error){
+        logout();
+    }
+  }
+
+  useEffect(() => {
+      if (jwt) {
+          const interval = setInterval(() => {
+              if (jwt && jwt.refresh) {
+                  console.log("Updating token..")
+                  refreshToken();
+              }
+          }, 1000 * 4 * 60 ); 
+
+          return () => clearInterval(interval);
+      }
+  }, [jwt, refreshToken]); 
+  
   useEffect(() => {
     fetchTodos();
   }, []);
