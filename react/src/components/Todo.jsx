@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from 'react-router-dom';
 
 const Todo = () => {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState('');
   const userdata = JSON.parse(localStorage.getItem('jwt'));
+  const navigate = useNavigate();
+
   const api = axios.create({
     baseURL: 'http://127.0.0.1:8000/app/',
     headers: {
@@ -35,6 +38,11 @@ const Todo = () => {
       await api.patch(`todo/${id}/`, { completed: !completed });
       setTodos(todos.map(todo => todo.id === id ? { ...todo, completed: !completed } : todo));
   };
+
+  const logout = async() => {
+    localStorage.removeItem('jwt');
+    navigate('/login');
+  }
 
   useEffect(() => {
     fetchTodos();
@@ -73,6 +81,9 @@ const Todo = () => {
                   </li>
               ))}
           </ul>
+          <div className="d-flex justify-content-center align-items-center">
+              <button onClick={() => logout()} className="btn btn-outline-secondary mt-3">Log out</button>
+          </div>
       </div>
   );
 }
