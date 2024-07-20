@@ -6,7 +6,7 @@ from .register import Register
 from .todo import TodoView
 
 router = DefaultRouter()
-router.register(r'todos', TodoView)
+router.register(r'todo', TodoView)
 
 urlpatterns = [
     path('token/', UpdatedTokenObtainPairView.as_view(), name='token_access'),
