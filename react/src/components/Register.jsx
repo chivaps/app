@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Register = () => {
     let navigate = useNavigate();
-
+    useEffect (() => {
+        localStorage.removeItem('jwt');
+    })
+    
     const baseUrl = axios.create({
         baseURL: 'http://127.0.0.1:8000/app/',
         headers: {
